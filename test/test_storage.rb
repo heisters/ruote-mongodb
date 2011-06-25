@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'test/unit'
 require 'mongo'
-require 'lib/ruote-mongodb'
+require File.expand_path('../functional_connection', __FILE__)
 
 #
 # note : using the 'errors' type, but this test is about generic storage, not
@@ -13,7 +13,7 @@ class UtStorage < Test::Unit::TestCase
   def setup
 
     # @s = determine_storage({})
-    @s = Ruote::MongoDbStorage.new
+    @s = new_storage
 
     #@s.add_type('errors')
 

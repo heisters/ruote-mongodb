@@ -26,19 +26,20 @@ module Ruote
       db_config.merge! options.delete(:connection) if options[:connection]
 
       @db = Mongo::Connection.new(db_config['host'], db_config['port']).
-	db(db_config['database'])
+        db(db_config['database'])
       if db_config['username'] && db_config['password']
         @db.authenticate(db_config['username'], db_config['password'])
       end
 
       unless get('configurations','engine')
-        put(options.merge('type'=>'configurations', '_id'=>'engine')) 
+        put(options.merge('type'=>'configurations', '_id'=>'engine'))
       end
     end
 
     def close_connection()
       @db.connection.close()
     end
+    alias_method :shutdown, :close_connection
 
     def put(doc, opts={})
       synchronize do
@@ -134,7 +135,7 @@ module Ruote
 
     def purge!
       synchronize do
-        @db.collection_names.each do |name| 
+        @db.collection_names.each do |name|
           @db.drop_collection(name) if name =~ /^#{@@collection_prefix}/
         end
       end
@@ -225,7 +226,7 @@ module Ruote
 
       result1.each_pair do |key, value|
         other_value = result2[key]
-        
+
         if other_value && value != other_value && !['put_at', 'created_time', '_rev'].include?(key)
           if value.is_a?(Hash) || value.is_a?(Array)
             diff(search_key, value, other_value, f, level + 1)
